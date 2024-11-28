@@ -3,12 +3,15 @@ plugins {
     id 'maven-publish'
 }
 
-sourceCompatibility = 1.10
-targetCompatibility = 1.10
+sourceCompatibility = 13
+targetCompatibility = 13
 
 dependencies {
     implementation 'org.slf4j:slf4j-simple:2.0.13'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.11.0-M2'
 }
 
 repositories {
@@ -23,4 +26,8 @@ publishing {
             from components.java
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
