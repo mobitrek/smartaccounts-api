@@ -9,6 +9,6 @@ class HmacSha1SignatureTest extends Specification {
         when:
             String hmac = calculateRFC2104HMAC("data", "key");
         then:
-            hmac.equals("104152c5bfdca07bc633eebd46199f0255c9f49d")
+            hmac == "5031fe3d989c6d1537a013fa6e739da23463fdaec3b70137d828e36ace221bd0"
     }
 }

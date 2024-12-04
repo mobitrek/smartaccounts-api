@@ -16,7 +16,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,7 +29,6 @@ public class SmartAccounts {
     private String apikey;
     private String secret;
     private String clientId;
-//    private SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
     private HttpClient cli = HttpClients.createDefault();
 
@@ -52,7 +50,7 @@ public class SmartAccounts {
         HttpPost post = new HttpPost(ub.build());
         post.setEntity(new StringEntity(json));
 //        List<NameValuePair> params = new ArrayList<NameValuePair>();
-//        params.add(new BasicNameValuePair("clientId", "f2016c93-d642-49da-97e2-25ec4573c140"));
+//        params.add(new BasicNameValuePair("clientId", "2564a1ae-2195-49d3-9acf-6f83868cec1d"));
 //        post.setEntity(new UrlEncodedFormEntity(params));
         HttpResponse resp = cli.execute(post);
         return resp;
@@ -73,7 +71,6 @@ public class SmartAccounts {
         HttpGet get = new HttpGet(uri);
 
         HttpResponse resp = cli.execute(get);
-//        log.info(resp.toString());
 //        log.info(EntityUtils.toString(resp.getEntity()));
         return resp;
     }
@@ -105,12 +102,12 @@ public class SmartAccounts {
     static ZonedDateTime getEstonianDate(){
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
         ZonedDateTime z = ZonedDateTime.now(ZoneId.of("Europe/Tallinn"));
-        log.info("now UTC: {}", now.toString());
+        log.info("now UTC: {}", now);
         log.info("now Tallinn: {}", z);
         return z;
     }
 
-    private void sign(URIBuilder ub, String body) throws URISyntaxException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+    private void sign(URIBuilder ub, String body) throws URISyntaxException, NoSuchAlgorithmException, InvalidKeyException {
         String query = ub.build().getQuery();
         log.info("query {}, body {}", query, body);
         if (body != null) query += body;
@@ -118,7 +115,7 @@ public class SmartAccounts {
         ub.addParameter("signature", signature);
     }
 
-    private void sign(URIBuilder ub) throws URISyntaxException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+    private void sign(URIBuilder ub) throws URISyntaxException, NoSuchAlgorithmException, InvalidKeyException {
         sign(ub, null);
     }
 }
