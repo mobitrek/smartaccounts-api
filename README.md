@@ -1,4 +1,5 @@
 ## SmartAccounts API lib for Java
+SmartAccounts (https://www.smartaccounts.eu/en/) is an online accounting software and this lib can be used to call it's API from Java.
 
 ### Quick Start
 
