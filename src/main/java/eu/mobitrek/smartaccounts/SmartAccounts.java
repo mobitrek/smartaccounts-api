@@ -1,6 +1,7 @@
 package eu.mobitrek.smartaccounts;
 
 import eu.mobitrek.security.HmacSha1Signature;
+import eu.mobitrek.smartaccounts.response.SaResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -42,7 +43,7 @@ public class SmartAccounts {
         this(apikey, secret, clientId, DEFAULT_URL);
     }
 
-    public String execPost(String cmd, String json) throws Exception{
+    public SaResponse execPost(String cmd, String json) throws Exception{
         URIBuilder ub = uriBuilder(cmd);
         ub.addParameter("clientId", clientId);
         sign(ub, json);
@@ -51,11 +52,12 @@ public class SmartAccounts {
 //        List<NameValuePair> params = new ArrayList<NameValuePair>();
 //        params.add(new BasicNameValuePair("clientId", "2564a1ae-2195-49d3-9acf-6f83868cec1d"));
 //        post.setEntity(new UrlEncodedFormEntity(params));
-        ClassicHttpResponse resp = cli.execute(post);
-        return EntityUtils.toString(resp.getEntity());
+        try (ClassicHttpResponse resp = cli.execute(post)) {
+            return new SaResponse(resp.getCode(), resp.getReasonPhrase(), EntityUtils.toString(resp.getEntity()));
+        }
     }
 
-    public String exec(String cmd, Map<String,String> params) throws Exception{
+    public SaResponse exec(String cmd, Map<String,String> params) throws Exception{
         URIBuilder ub = uriBuilder(cmd);
 
         if (params != null){
@@ -69,16 +71,16 @@ public class SmartAccounts {
         log.info("uri {}", uri.toString());
         HttpGet get = new HttpGet(uri);
 
-        ClassicHttpResponse resp = cli.execute(get);
-//        log.info(EntityUtils.toString(resp.getEntity()));
-        return EntityUtils.toString(resp.getEntity());
+        try (ClassicHttpResponse resp = cli.execute(get)) {
+            return new SaResponse(resp.getCode(), resp.getReasonPhrase(), EntityUtils.toString(resp.getEntity()));
+        }
     }
 
-    public String execPurchasesalesClientsGet(Map<String, String> params) throws Exception{
+    public SaResponse execPurchasesalesClientsGet(Map<String, String> params) throws Exception{
         return exec("/purchasesales/clients:get", params);
     }
 
-    public String execPurchasesalesClientInvoicesAdd(String json) throws Exception{
+    public SaResponse execPurchasesalesClientInvoicesAdd(String json) throws Exception{
         return execPost("/purchasesales/clientinvoices:add", json);
     }
 
